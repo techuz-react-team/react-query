@@ -1,9 +1,10 @@
 import Layout from '../Components/Layout';
 import Link from '../Components/Link';
-import { useTodos } from '../api/useTodos';
+import { getTodos } from '../api/todo_api';
+import { dehydrate, QueryClient, useQuery } from 'react-query';
 
 const Todos = () => {
-  const todosData = useTodos();
+  const todosData = useQuery('Todos', getTodos);
 
   if (!todosData.data || todosData.isLoading) {
     return (
@@ -32,3 +33,13 @@ const Todos = () => {
 };
 
 export default Todos;
+
+export async function getStaticProps(context) {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery('Todos', getTodos);
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+}

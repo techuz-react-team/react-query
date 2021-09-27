@@ -1,12 +1,12 @@
 import Layout from '../../Components/Layout';
-import { useTodo } from '../../api/useTodo';
+import { getTodo } from '../../api/todo_api';
 import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
 
 const Todo = () => {
   const router = useRouter();
   const { id } = router.query;
-  const todoData = useTodo(id);
-
+  const todoData = useQuery(['todo', id], () => getTodo(id));
   if (!todoData.data || todoData.isLoading) {
     return (
       <>
@@ -24,7 +24,7 @@ const Todo = () => {
       <hr />
       <h2>Task: {title}</h2>
       <br />
-      <p>Completed: {completed}</p>
+      <p>Completed: {completed ? 'true' : 'false'}</p>
     </>
   );
 };

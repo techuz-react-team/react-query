@@ -10,6 +10,9 @@ const Header = () => {
             <Nav.Link as={Link} href='/posts'>
               Posts
             </Nav.Link>
+            <Nav.Link as={Link} href='/todoOp'>
+              Todo operation
+            </Nav.Link>
             <Nav.Link as={Link} href='/todos'>
               Todos
             </Nav.Link>
