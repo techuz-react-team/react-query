@@ -1,7 +1,7 @@
 import Layout from '../../Components/Layout';
 import { getTodo } from '../../api/todo_api';
 import { useRouter } from 'next/router';
-import { useQuery } from 'react-query';
+import { dehydrate, QueryClient, useQuery } from 'react-query';
 
 const Todo = () => {
   const router = useRouter();
@@ -30,3 +30,23 @@ const Todo = () => {
 };
 
 export default Todo;
+
+export async function getStaticProps({ params }) {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(['todo', params.id], () =>
+    getTodo(params.id)
+  );
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+}
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (let index = 0; index < 202; index++) {
+    paths.push({ params: { id: `${index}` } });
+  }
+  return { paths, fallback: false };
+}
