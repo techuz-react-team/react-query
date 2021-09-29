@@ -1,5 +1,5 @@
 import Layout from '../../Components/Layout';
-import { getTodo } from '../../api/todo_api';
+import { getTodo, getTodos } from '../../api/todo_api';
 import { useRouter } from 'next/router';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 
@@ -44,9 +44,7 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  const paths = [];
-  for (let index = 0; index < 202; index++) {
-    paths.push({ params: { id: `${index}` } });
-  }
+  const todoList = await getTodos();
+  const paths = todoList.map((todo) => ({ params: { id: `${todo.id}` } }));
   return { paths, fallback: false };
 }
